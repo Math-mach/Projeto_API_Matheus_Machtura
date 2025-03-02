@@ -1,0 +1,29 @@
+{
+  "name": "projeto-api",
+  "version": "1.0.0",
+  "description": "API REST para gerenciamento de atividades de voluntariado, utilizando Node.js, Express, RocksDB para armazenamento, autenticação JWT e bcrypt para segurança de senhas.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Math-mach/Projeto_API_Matheus_Machtura.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Math-mach/Projeto_API_Matheus_Machtura/issues"
+  },
+  "homepage": "https://github.com/Math-mach/Projeto_API_Matheus_Machtura#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "rocksdb": "^5.2.1"
+  }
+}

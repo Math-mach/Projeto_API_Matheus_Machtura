@@ -20,4 +20,7 @@ app.use((req, res, next) => {
   next();
 });
 
+const authRoutes = require("./routes/authRoutes");
+app.use("/auth", authRoutes);
+
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));

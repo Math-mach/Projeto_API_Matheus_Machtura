@@ -6,26 +6,31 @@ class Database {
     this.db = rocksdb(`${DBSTORAGE}/${dbName}`);
   }
 
-  // Abre o banco de dados
   open() {
     return new Promise((resolve, reject) => {
       this.db.open((err) =>
-        err ? reject(err) : resolve("Banco de dados aberto!")
+        err ? reject(err) : resolve(`Banco de dados aberto!`)
       );
     });
   }
 
-  // Exemplo de função para pegar todos os itens (caso queira listar tudo)
-  getAll() {
+  put(key, value) {
     return new Promise((resolve, reject) => {
-      const allItems = [];
-      this.db.iterator({ gte: "", lte: "" }).each(
-        (err, key, value) => {
-          if (err) reject(err);
-          allItems.push({ key, value: JSON.parse(value) });
-        },
-        () => resolve(allItems)
+      this.db.put(key, JSON.stringify(value), (err) =>
+        err ? reject(err) : resolve(`Salvo com sucesso: ${key}`)
       );
+    });
+  }
+
+  get(key) {
+    return new Promise((resolve, reject) => {
+      this.db.get(key, (err, value) => {
+        if (err) {
+          resolve(null);
+        } else {
+          resolve(JSON.parse(value));
+        }
+      });
     });
   }
 }

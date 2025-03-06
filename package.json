@@ -4,7 +4,7 @@
   "description": "API REST para gerenciamento de atividades de voluntariado, utilizando Node.js, Express, RocksDB para armazenamento, autenticação JWT e bcrypt para segurança de senhas.",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "nodemon src/index.js"
   },
   "repository": {
     "type": "git",

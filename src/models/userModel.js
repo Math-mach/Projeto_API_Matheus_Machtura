@@ -73,7 +73,7 @@ class UserModel {
         email,
         name,
         password: hashedPassword,
-        role: "admin",
+        role: "user",
       });
 
       return res.status(201).json({

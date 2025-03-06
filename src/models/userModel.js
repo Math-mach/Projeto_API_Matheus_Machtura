@@ -36,12 +36,33 @@ class UserModel {
           .json({ error: "E-mail e senha são obrigatórios" });
       }
 
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({ error: "O e-mail fornecido é inválido" });
+      }
+
+      const passwordMinLength = 8;
+      const passwordRegex =
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+
+      if (password.length < passwordMinLength) {
+        return res.status(400).json({
+          error: `A senha deve ter no mínimo ${passwordMinLength} caracteres.`,
+        });
+      }
+
+      if (!passwordRegex.test(password)) {
+        return res.status(400).json({
+          error:
+            "A senha deve conter pelo menos uma letra, um número e um caractere especial.",
+        });
+      }
+
       const existingUser = await this.db.get(email);
 
       if (existingUser) {
         return res.status(409).json({ error: "E-mail já cadastrado" });
-      } else {
-        console.log("Email não achado");
       }
 
       const id = await this.generateUniqueId();
@@ -55,7 +76,6 @@ class UserModel {
         role: "user",
       });
 
-      console.log(`Usuário ${email} registrado com sucesso! ID: ${id}`);
       return res.status(201).json({
         message: "Usuário registrado com sucesso",
         user: { id, email, name },

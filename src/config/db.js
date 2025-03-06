@@ -33,6 +33,35 @@ class Database {
       });
     });
   }
+
+  getAll() {
+    return new Promise((resolve, reject) => {
+      const data = [];
+      const iterator = this.db.iterator({});
+
+      const loop = () => {
+        iterator.next((err, key, value) => {
+          if (err) {
+            iterator.end(() => reject(err));
+            return;
+          }
+
+          if (!key && !value) {
+            iterator.end(() => resolve(data));
+            return;
+          }
+
+          data.push({
+            key: key.toString(),
+            value: JSON.parse(value.toString()),
+          });
+          loop();
+        });
+      };
+
+      loop();
+    });
+  }
 }
 
 module.exports = Database;

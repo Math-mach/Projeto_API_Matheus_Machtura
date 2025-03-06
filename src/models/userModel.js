@@ -73,15 +73,14 @@ class UserModel {
         email,
         name,
         password: hashedPassword,
-        role: "user",
+        role: "admin",
       });
 
       return res.status(201).json({
         message: "Usuário registrado com sucesso",
-        user: { id, email, name },
       });
     } catch (error) {
-      console.error("Erro no registro:", error);
+      console.error("Erro no registro de usuarios:", error);
       return res.status(500).json({ error: `Erro interno no servidor` });
     }
   }
@@ -106,9 +105,13 @@ class UserModel {
         return res.status(401).json({ error: "Senha incorreta" });
       }
 
-      const token = jwt.sign({ id: user.id, email: user.email }, SECRET_KEY, {
-        expiresIn: "1h",
-      });
+      const token = jwt.sign(
+        { id: user.id, email: user.email, role: user.role },
+        SECRET_KEY,
+        {
+          expiresIn: "1h",
+        }
+      );
       res.cookie("token", token, { httpOnly: true });
 
       res.status(200).json({

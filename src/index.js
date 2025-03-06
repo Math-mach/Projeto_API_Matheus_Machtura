@@ -23,4 +23,7 @@ app.use((req, res, next) => {
 const authRoutes = require("./routes/authRoutes");
 app.use("/auth", authRoutes);
 
+const activityRoutes = require("./routes/activityRoutes");
+app.use("/activities", activityRoutes);
+
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));

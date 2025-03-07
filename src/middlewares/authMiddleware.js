@@ -6,6 +6,7 @@ const { JWT_SECRET: SECRET_KEY } = require("../config/env");
  */
 function jtwMiddleware(req, res, next) {
   const token = req.cookies.token;
+  console.log(req.cookies.token);
 
   if (!token) {
     return res.status(401).json({ message: "Acesso negado. Faça login." });

@@ -10,7 +10,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 const corsOptions = {
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  origin: "http://127.0.0.1:5500",
+  credentials: true,
 };
 
 app.use(cors(corsOptions));

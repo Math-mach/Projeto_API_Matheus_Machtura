@@ -112,10 +112,15 @@ class UserModel {
           expiresIn: "1h",
         }
       );
-      res.cookie("token", token, { httpOnly: true });
+      res.cookie("token", token, {
+        httpOnly: true,
+        sameSite: "Strict",
+        secure: false,
+      });
 
       res.status(200).json({
         message: "Login bem-sucedido",
+        userId: user.id,
       });
     } catch (error) {
       res.status(500).json({ message: "Erro no servidor" });

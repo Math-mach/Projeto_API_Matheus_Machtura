@@ -5,12 +5,11 @@ const adminMiddleware = require("../middlewares/roleMiddleware");
 
 const router = express.Router();
 
-router.use(jtwMiddleware);
-
 router.get("/list", activityController.listActivities);
 router.post("/join/:id", activityController.joinActivity);
 router.post("/leave/:id", activityController.leaveActivity);
 
+router.use(jtwMiddleware);
 router.use(adminMiddleware);
 
 router.post("/create", activityController.createActivity);

@@ -62,6 +62,14 @@ class Database {
       loop();
     });
   }
+
+  del(key) {
+    return new Promise((resolve, reject) => {
+      this.db.del(key, (err) =>
+        err ? reject(err) : resolve(`Deletado com sucesso: ${key}`)
+      );
+    });
+  }
 }
 
 module.exports = Database;

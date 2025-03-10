@@ -28,7 +28,8 @@ class UserModel {
 
   async register(req, res) {
     try {
-      const { email, name, password } = req.body;
+      const { email, password } = req.body;
+      const role = "user";
 
       if (!email || !password) {
         return res
@@ -71,13 +72,23 @@ class UserModel {
       await this.db.put(email, {
         id,
         email,
-        name,
         password: hashedPassword,
-        role: "user",
+        role,
+      });
+
+      const token = jwt.sign({ id: id, email: email, role: role }, SECRET_KEY, {
+        expiresIn: "1h",
+      });
+      res.cookie("token", token, {
+        httpOnly: true,
+        sameSite: "Strict",
+        secure: false,
       });
 
       return res.status(201).json({
         message: "Usuário registrado com sucesso",
+        userId: id,
+        userRole: role,
       });
     } catch (error) {
       console.error("Erro no registro de usuarios:", error);
@@ -117,15 +128,17 @@ class UserModel {
         sameSite: "Strict",
         secure: false,
       });
-
       res.status(200).json({
         message: "Login bem-sucedido",
         userId: user.id,
+        userRole: user.role,
       });
     } catch (error) {
       res.status(500).json({ message: "Erro no servidor" });
     }
   }
 }
+
+function addCookie(userId, userEmail, userRole = "user") {}
 
 module.exports = UserModel;

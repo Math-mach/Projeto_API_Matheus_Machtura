@@ -67,7 +67,7 @@ function openAdminModal() {
     if (
       !event.title ||
       !event.description ||
-      !event.location ||
+      !event.local ||
       !event.date ||
       event.maxP <= 0
     ) {

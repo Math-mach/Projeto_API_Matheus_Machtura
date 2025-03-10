@@ -14,3 +14,4 @@ yarn-error.log*
 
 # Database files (RocksDB)
 database/*
+!/database/.gitkeep

@@ -29,8 +29,8 @@ class UserModel {
 
   async ensureAdminExists() {
     try {
-      const adminEmail = "admin";
-      const adminPassword = "admin123";
+      const adminEmail = "admin@gmail.com";
+      const adminPassword = "@dmin123";
 
       // Verifica se o admin já existe no banco
       const existingAdmin = await this.db.get(adminEmail);

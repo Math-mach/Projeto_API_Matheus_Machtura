@@ -42,6 +42,7 @@ export function login(content) {
       if (response.ok) {
         const data = await response.json();
         localStorage.setItem("userId", data.userId);
+        localStorage.setItem("userRole", data.userRole);
         navigateTo("/activities");
         document.getElementById("activities-link").style.display = "inline";
         document.getElementById("my-activities-link").style.display = "inline";

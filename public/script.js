@@ -17,6 +17,8 @@ document.getElementById("register-link").addEventListener("click", () => {
 });
 
 window.addEventListener("load", () => {
+  localStorage.removeItem("userId");
+  localStorage.removeItem("userRole");
   document.getElementById("activities-link").style.display = "none";
   document.getElementById("my-activities-link").style.display = "none";
   navigateTo("/login");

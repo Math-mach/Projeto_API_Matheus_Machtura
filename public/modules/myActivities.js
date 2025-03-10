@@ -1,4 +1,13 @@
+let controllerCount = 0;
+
+/**
+ * Loads and displays the list of activities the user is participating in.
+ * @param {HTMLElement} content - The HTML element where the activities list will be rendered.
+ */
 export function loadMyActivities(content) {
+  // Prevents multiple simultaneous requests
+  if (controllerCount !== 0) return;
+
   content.innerHTML = "<h2>My Activities List</h2>";
 
   const loadingMessage = document.createElement("p");
@@ -6,6 +15,7 @@ export function loadMyActivities(content) {
 
   const userId = localStorage.getItem("userId");
 
+  // Check if the user is authenticated
   if (!userId) {
     loadingMessage.remove();
     const errorMessage = document.createElement("p");
@@ -14,6 +24,9 @@ export function loadMyActivities(content) {
     return;
   }
 
+  controllerCount = 1;
+
+  // Fetch activities list from the server
   fetch("http://localhost:3000/activities/list", {
     method: "GET",
     headers: {
@@ -31,7 +44,7 @@ export function loadMyActivities(content) {
       loadingMessage.remove();
 
       if (activities && Array.isArray(activities)) {
-        // Filtrando atividades em que o usuário está participando
+        // Filter activities that the user is participating in
         const filteredActivities = activities.filter((activity) =>
           activity.participants.includes(parseInt(userId))
         );
@@ -42,6 +55,7 @@ export function loadMyActivities(content) {
           filteredActivities.forEach((activity) => {
             const listItem = document.createElement("li");
 
+            // Display activity details
             listItem.innerHTML = `
               <strong>${activity.title}</strong><br />
               <span><strong>Description:</strong> ${activity.description}</span><br />
@@ -51,6 +65,15 @@ export function loadMyActivities(content) {
               <hr />
             `;
 
+            // Create "Leave Activity" button
+            const leaveButton = document.createElement("button");
+            leaveButton.textContent = "Leave Activity";
+            leaveButton.addEventListener("click", function () {
+              leaveButton.parentElement.remove(); // Remove activity from UI
+              leaveActivity(activity.id); // Call function to leave activity
+            });
+
+            listItem.appendChild(leaveButton);
             activitiesList.appendChild(listItem);
           });
 
@@ -60,10 +83,7 @@ export function loadMyActivities(content) {
           noActivitiesMessage.innerText = "No activities found for the user.";
           content.appendChild(noActivitiesMessage);
         }
-      } else {
-        const noActivitiesMessage = document.createElement("p");
-        noActivitiesMessage.innerText = "No activities found.";
-        content.appendChild(noActivitiesMessage);
+        controllerCount = 0;
       }
     })
     .catch((error) => {
@@ -74,5 +94,29 @@ export function loadMyActivities(content) {
       errorMessage.innerText =
         "Error loading activities. Please try again later.";
       content.appendChild(errorMessage);
+    });
+}
+
+/**
+ * Sends a request to remove the user from an activity.
+ * @param {number} activityId - The ID of the activity to leave.
+ */
+function leaveActivity(activityId) {
+  fetch(`http://localhost:3000/activities/leave/${activityId}`, {
+    method: "POST",
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Failed to leave activity");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      alert("Successfully left the activity!");
+      console.log("leave response:", data);
+    })
+    .catch((error) => {
+      console.error("Error leaving activity:", error);
+      alert("Error leaving activity. Please try again.");
     });
 }

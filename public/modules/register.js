@@ -76,7 +76,15 @@ export function register(content) {
       });
 
       if (response.ok) {
-        alert("Registro feito com sucesso, vá logar");
+        const data = await response.json();
+
+        localStorage.setItem("userId", data.userId);
+        localStorage.setItem("userRole", data.userRole);
+        navigateTo("/activities");
+        document.getElementById("activities-link").style.display = "inline";
+        document.getElementById("my-activities-link").style.display = "inline";
+        document.getElementById("login-link").style.display = "none";
+        document.getElementById("register-link").style.display = "none";
       } else {
         const errorData = await response.json();
         errorMessage.style.display = "block";

@@ -25,7 +25,7 @@ class ActivityModel {
 
   async newActivity(req, res) {
     try {
-      const { title, description, date, maxP } = req.body;
+      const { title, description, local, date, maxP } = req.body;
 
       if (!title || !description || !date || maxP <= 0) {
         return res.status(400).json({
@@ -39,6 +39,7 @@ class ActivityModel {
         title,
         description,
         date,
+        local,
         participants: [],
         maxP,
       });
@@ -48,6 +49,44 @@ class ActivityModel {
         .json({ message: "Atividade registrada com sucesso" });
     } catch (error) {
       console.error("Erro no registro de atividades:", error);
+      return res.status(500).json({ error: "Erro interno no servidor" });
+    }
+  }
+
+  async updateActivity(req, res) {
+    try {
+      const { id } = req.params; // ID da atividade passada na URL
+      const { title, description, local, date, maxP } = req.body;
+
+      if (!title || !description || !date || maxP <= 0) {
+        return res.status(400).json({
+          error: "Todos os campos são obrigatórios e maxP deve ser maior que 0",
+        });
+      }
+
+      // Verifica se a atividade existe
+      const existingActivity = await this.db.get(id.toString());
+      if (!existingActivity) {
+        return res.status(404).json({ error: "Atividade não encontrada" });
+      }
+
+      // Atualiza os dados da atividade mantendo os participantes
+      const updatedActivity = {
+        ...existingActivity,
+        title,
+        description,
+        date,
+        local,
+        maxP,
+      };
+
+      await this.db.put(id.toString(), updatedActivity);
+
+      return res
+        .status(200)
+        .json({ message: "Atividade atualizada com sucesso" });
+    } catch (error) {
+      console.error("Erro ao atualizar atividade:", error);
       return res.status(500).json({ error: "Erro interno no servidor" });
     }
   }

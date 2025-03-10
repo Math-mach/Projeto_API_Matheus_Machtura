@@ -28,6 +28,14 @@ const listActivities = async (req, res) => {
     return res.status(500).json({ error: "Erro interno no servidor" });
   }
 };
+const updateActivity = async (req, res) => {
+  try {
+    await activityModel.updateActivity(req, res);
+  } catch (error) {
+    console.error("Erro ao listar atividades:", error);
+    return res.status(500).json({ error: "Erro interno no servidor" });
+  }
+};
 
 const joinActivity = async (req, res) => {
   try {
@@ -60,6 +68,7 @@ module.exports = {
   createActivity,
   listActivities,
   joinActivity,
+  updateActivity,
   leaveActivity,
   deleteActivity,
 };

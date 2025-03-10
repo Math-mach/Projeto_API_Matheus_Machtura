@@ -11,6 +11,7 @@ class UserModel {
 
   async open() {
     await this.db.open();
+    await this.ensureAdminExists();
   }
 
   async generateUniqueId() {
@@ -24,6 +25,35 @@ class UserModel {
     }
 
     return id;
+  }
+
+  async ensureAdminExists() {
+    try {
+      const adminEmail = "admin";
+      const adminPassword = "admin123";
+
+      // Verifica se o admin já existe no banco
+      const existingAdmin = await this.db.get(adminEmail);
+      if (existingAdmin) return;
+
+      // Se não existir, cria um admin
+      const id = await this.generateUniqueId();
+      const hashedPassword = await bcrypt.hash(
+        adminPassword,
+        parseInt(SALT_ROUNDS)
+      );
+
+      await this.db.put(adminEmail, {
+        id,
+        email: adminEmail,
+        password: hashedPassword,
+        role: "admin",
+      });
+
+      console.log("Administrador criado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao criar administrador:", error);
+    }
   }
 
   async register(req, res) {
